@@ -13,6 +13,8 @@ src := $(shell find $(SRC_DIR) -type f -name *.java)
 .class := $(patsubst $(SRC_DIR)/%,$(BUILD_DIR)/%,$(patsubst %.java,%.class,$(src)))
 
 P1 := de.fh.stud.p1.MyAgent_P1
+P2 :=
+P3 :=
 
 MAIN := $(P1)
 ARGS =
