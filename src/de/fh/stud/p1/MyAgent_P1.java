@@ -8,6 +8,7 @@ import de.fh.pacman.PacmanPercept;
 import de.fh.pacman.PacmanStartInfo;
 import de.fh.pacman.enums.PacmanAction;
 import de.fh.pacman.enums.PacmanActionEffect;
+import de.fh.pacman.enums.PacmanTileType;
 
 public class MyAgent_P1 extends PacmanAgent {
 
@@ -30,6 +31,13 @@ public class MyAgent_P1 extends PacmanAgent {
         printPos(percept);
 
         nextAction = avoidWallPreemptively(percept, actionEffect);
+
+        // Zusatzaufgabe
+        var x = percept.getPosX();
+        var y = percept.getPosY();
+        if (nextAction == PacmanAction.GO_NORTH &&
+                view[x + 1][y] == PacmanTileType.DOT)
+            nextAction = PacmanAction.GO_EAST;
 
         currentAction = nextAction;
         return nextAction;
