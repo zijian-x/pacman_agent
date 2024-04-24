@@ -22,20 +22,12 @@ public class MyAgent_P1 extends PacmanAgent {
         Agent.start(agent, "127.0.0.1", 5000);
     }
 
-    private void printCurrentPos(PacmanPercept percept) {
-        var x = percept.getPosX();
-        var y = percept.getPosY();
-        System.out.println("x: " + x);
-        System.out.println("y: " + y);
-    }
-
     @Override
     public PacmanAction action(PacmanPercept percept,
             PacmanActionEffect actionEffect) {
         var view = percept.getView();
-
         Util.printView(view);
-        printCurrentPos(percept);
+        printPos(percept);
 
         nextAction = avoidWallPreemptively(percept, actionEffect);
 
@@ -50,7 +42,7 @@ public class MyAgent_P1 extends PacmanAgent {
         var y = percept.getPosY();
         switch (currentAction) {
             case GO_EAST:
-                if (x + 2 == grid[y].length)
+                if (x + 2 == grid.length)
                     return PacmanAction.GO_SOUTH;
                 break;
             case GO_NORTH:
@@ -58,7 +50,7 @@ public class MyAgent_P1 extends PacmanAgent {
                     return PacmanAction.GO_EAST;
                 break;
             case GO_SOUTH:
-                if (y + 2 == grid.length)
+                if (y + 2 == grid[0].length)
                     return PacmanAction.GO_WEST;
                 break;
             case GO_WEST:
@@ -68,7 +60,21 @@ public class MyAgent_P1 extends PacmanAgent {
             default:
                 break;
         }
+
         return currentAction;
+    }
+
+    private void printPos(PacmanPercept percept) {
+        var view = percept.getView();
+        var pos = percept.getPosition();
+        var x = pos.x;
+        var y = pos.y;
+        System.out.println("row len: " + view[0].length);
+        System.out.println("col len: " + view.length);
+        System.out.println("cur row: " + y);
+        System.out.println("cur col: " + x);
+        System.out.println("current: " + view[x][y]);
+        System.out.println("right neighbor: " + view[x][y + 1]);
     }
 
     @Override
