@@ -1,25 +1,25 @@
 package de.fh.stud.p3;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
+
+import de.fh.pacman.enums.PacmanAction;
 import de.fh.stud.p2.Knoten;
 
-public class Suche {
-	
-	/*
-	 * TODO Praktikum 3 [1]: Erweitern Sie diese Klasse um die notwendigen
-	 * Attribute und Methoden um eine Tiefensuche durchführen zu können.
-	 * Die Erweiterung um weitere Suchstrategien folgt in Praktikum 4.
-	 */
-	
-	/*
-	 * TODO Praktikum 4 [1]: Erweitern Sie diese Klasse um weitere Suchstrategien (siehe Aufgabenblatt)
-	 * zu unterstützen.
-	 */
-	
-	public Knoten start() {
-		/*
-		 * TODO Praktikum 3 [2]: Implementieren Sie hier den Algorithmus einer Tiefensuche.
-		 */
-		return null;
+public abstract class Suche {
+
+	protected final Deque<Knoten> opened = new ArrayDeque<Knoten>();
+	protected final Set<Knoten> closed = new HashSet<>();
+	protected final Queue<Knoten> path = new ArrayDeque<>();
+
+	public Suche(Knoten startKnoten) {
+		startKnoten.expand().forEach(opened::offer);
+		closed.add(startKnoten);
 	}
-	
+
+	public abstract Knoten next();
+
 }

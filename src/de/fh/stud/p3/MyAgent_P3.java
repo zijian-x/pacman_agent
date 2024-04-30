@@ -1,5 +1,10 @@
 package de.fh.stud.p3;
 
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Queue;
+
 import de.fh.kiServer.agents.Agent;
 import de.fh.kiServer.util.Util;
 import de.fh.pacman.PacmanAgent;
@@ -12,15 +17,13 @@ import de.fh.stud.p2.Knoten;
 
 public class MyAgent_P3 extends PacmanAgent {
 
-	/**
-	 * Die als nächstes auszuführende Aktion
-	 */
 	private PacmanAction nextAction;
-	
-	/**
-	 * Der gefundene Lösungknoten der Suche
-	 */
-	private Knoten loesungsKnoten;
+
+	private Suche suche;
+	private Queue<Knoten> path = new ArrayDeque<>();
+
+	private Knoten currentKnoten;
+	private Knoten nextKnoten;
 	
 	public MyAgent_P3(String name) {
 		super(name);
@@ -31,52 +34,71 @@ public class MyAgent_P3 extends PacmanAgent {
 		Agent.start(agent, "127.0.0.1", 5000);
 	}
 
-	/**
-	 * @param percept - Aktuelle Wahrnehmung des Agenten, bspw. Position der Geister und Zustand aller Felder der Welt.
-	 * @param actionEffect - Aktuelle Rückmeldung des Server auf die letzte übermittelte Aktion.
-	 */
-	@Override
 	public PacmanAction action(PacmanPercept percept, PacmanActionEffect actionEffect) {
-		
-		//Gebe den aktuellen Zustand der Welt auf der Konsole aus
 		Util.printView(percept.getView());
-		
-		//Wenn noch keine Lösung gefunden wurde, dann starte die Suche
-		if (loesungsKnoten == null) {
-			/*
-			 * TODO Praktikum 3 [3]: Übergebt hier der Suche die notwendigen Informationen, um
-			 * von einem Startzustand zu einem Zielzustand zu gelangen.
-			 */
-			/*
-			 * TODO Praktikum 4 [2]: Entscheidet hier welches Suchverfahren ausgeführt werden soll.
-			 */
-			Suche suche = new Suche();
-			loesungsKnoten = suche.start();
+
+		if (path.isEmpty())
+			fillPath(suche.next());
+
+		this.nextKnoten = path.poll();
+		this.nextAction = toTargetAction();
+		this.currentKnoten = this.nextKnoten;
+
+		return this.nextAction;
+	}
+
+	private void fillPath(Knoten target) {
+		var visited = new HashSet<Knoten>();
+		Queue<Map.Entry<ArrayDeque<Knoten>, Knoten>> que = new ArrayDeque<>();
+
+		que.offer(Map.entry(new ArrayDeque<Knoten>(), target));
+		while (!que.isEmpty()) {
+			for (var size = que.size(); size > 0; --size) {
+				var entry = que.poll();
+				var history = entry.getKey();
+				var cur = entry.getValue();
+				if (visited.contains(cur))
+					continue;
+				if (cur.equals(this.currentKnoten)) {
+					while (!history.isEmpty())
+						path.offer(history.pollLast());
+					return;
+				}
+
+				history.offerLast(cur);
+				visited.add(cur);
+				cur.expand().forEach(neighbor ->
+						que.offer(Map.entry(new ArrayDeque<Knoten>(history), neighbor)));
+			}
 		}
-		
-		//Wenn die Suche eine Lösung gefunden hat, dann ermittle die als nächstes auszuführende Aktion
-		if (loesungsKnoten != null) {
-			/*
-			 * TODO Praktikum 3 [4]: Ermittelt hier die als naechstes auszufuehrende Aktion,
-			 * basierend auf dem loesungsknoten und weist diese nextAction zu.
-			 */
-			
-		} else {
-			//Ansonsten wurde keine Lösung gefunden und der Pacman kann das Spiel aufgeben
-			nextAction = PacmanAction.QUIT_GAME;
-		}
-		
-		return nextAction;
+
+		throw new IllegalStateException("Path to node not found");
+	}
+
+	private PacmanAction toTargetAction() {
+		int dx = nextKnoten.x - this.currentKnoten.x;
+		int dy = nextKnoten.y - this.currentKnoten.y;
+
+		if (dx != 0 && dy != 0)
+			throw new IllegalStateException("Error: Next node isn't the immediate neighbor");
+		if (dx == 0 && dy == 0)
+			return PacmanAction.WAIT;
+		if (dx != 0)
+			return (dx > 0) ? PacmanAction.GO_EAST : PacmanAction.GO_WEST;
+		return (dy > 0) ? PacmanAction.GO_SOUTH : PacmanAction.GO_NORTH;
 	}
 
 	@Override
 	protected void onGameStart(PacmanStartInfo startInfo) {
-		
+		/*
+		 * TODO Praktikum 4 [2]: Entscheidet hier welches Suchverfahren ausgeführt werden soll.
+		 */
+		this.currentKnoten = new Knoten(startInfo.getPercept().getView(),
+									startInfo.getStartX(), startInfo.getStartY());
+		suche = new Tiefensuche(this.currentKnoten);
 	}
 
-	@Override
-	protected void onGameover(PacmanGameResult gameResult) {
-		
+	@Override protected void onGameover(PacmanGameResult gameResult) {
 	}
 	
 }
