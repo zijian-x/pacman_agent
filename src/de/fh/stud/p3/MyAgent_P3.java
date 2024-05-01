@@ -24,11 +24,11 @@ public class MyAgent_P3 extends PacmanAgent {
 	private Suche suche;
 	private Knoten currentKnoten;
 	private Knoten nextKnoten;
-	
+
 	public MyAgent_P3(String name) {
 		super(name);
 	}
-	
+
 	public static void main(String[] args) {
 		MyAgent_P3 agent = new MyAgent_P3("MyAgent");
 		Agent.start(agent, "127.0.0.1", 5000);
@@ -97,5 +97,5 @@ public class MyAgent_P3 extends PacmanAgent {
 
 	@Override protected void onGameover(PacmanGameResult gameResult) {
 	}
-	
+
 }

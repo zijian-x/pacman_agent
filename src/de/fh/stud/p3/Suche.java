@@ -13,7 +13,6 @@ public abstract class Suche {
 
 	protected final Deque<Knoten> opened = new ArrayDeque<Knoten>();
 	protected final Set<Knoten> closed = new HashSet<>();
-	protected final Queue<Knoten> path = new ArrayDeque<>();
 
 	public Suche(Knoten startKnoten) {
 		startKnoten.expand().forEach(opened::offer);
