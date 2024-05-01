@@ -19,9 +19,9 @@ public class MyAgent_P3 extends PacmanAgent {
 
 	private PacmanAction nextAction;
 
-	private Suche suche;
-	private Queue<Knoten> path = new ArrayDeque<>();
+	private final Queue<Knoten> path = new ArrayDeque<>();
 
+	private Suche suche;
 	private Knoten currentKnoten;
 	private Knoten nextKnoten;
 	
@@ -90,12 +90,9 @@ public class MyAgent_P3 extends PacmanAgent {
 
 	@Override
 	protected void onGameStart(PacmanStartInfo startInfo) {
-		/*
-		 * TODO Praktikum 4 [2]: Entscheidet hier welches Suchverfahren ausgeführt werden soll.
-		 */
 		this.currentKnoten = new Knoten(startInfo.getPercept().getView(),
 									startInfo.getStartX(), startInfo.getStartY());
-		suche = new Tiefensuche(this.currentKnoten);
+		suche = new Breitensuche(this.currentKnoten);
 	}
 
 	@Override protected void onGameover(PacmanGameResult gameResult) {
