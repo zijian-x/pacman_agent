@@ -92,7 +92,7 @@ public class MyAgent_P3 extends PacmanAgent {
 	protected void onGameStart(PacmanStartInfo startInfo) {
 		this.currentKnoten = new Knoten(startInfo.getPercept().getView(),
 									startInfo.getStartX(), startInfo.getStartY());
-		suche = new Breitensuche(this.currentKnoten);
+		suche = new Tiefensuche(this.currentKnoten);
 	}
 
 	@Override protected void onGameover(PacmanGameResult gameResult) {

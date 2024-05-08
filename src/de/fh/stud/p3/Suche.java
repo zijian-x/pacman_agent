@@ -3,10 +3,8 @@ package de.fh.stud.p3;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
-import java.util.Queue;
 import java.util.Set;
 
-import de.fh.pacman.enums.PacmanAction;
 import de.fh.stud.p2.Knoten;
 
 public abstract class Suche {

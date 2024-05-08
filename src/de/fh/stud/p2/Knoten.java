@@ -36,6 +36,10 @@ public class Knoten {
 		return list;
 	}
 
+    public PacmanTileType zustand() {
+        return this.view[this.x][this.y];
+    }
+
 	@SuppressWarnings("unused")
 	private PacmanTileType[][] copyView(final PacmanTileType[][] view) {
 		var newView = new PacmanTileType[view.length][view[0].length];
