@@ -1,5 +1,6 @@
 SRC_DIR := src
 BUILD_DIR := build
+DIR_GUARD = @mkdir -p "$(@D)"
 
 JFX := -p lib/javafx-sdk-21.0.3/lib --add-modules ALL-MODULE-PATH
 LIBS := $(JFX) -p lib --add-modules Server
@@ -24,6 +25,7 @@ ARGS =
 all: $(.class)
 
 $(.class): $(src)
+	$(DIR_GUARD)
 	$(JC) $(JCOPT) $(src)
 
 clean:

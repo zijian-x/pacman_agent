@@ -6,19 +6,19 @@ import java.util.Objects;
 
 import de.fh.pacman.enums.PacmanTileType;
 
-public class Knoten {
+public class Node {
 
 	public PacmanTileType[][] view;
 	public final int x, y;
 
-	public Knoten(PacmanTileType[][] view, int x, int y) {
+	public Node(PacmanTileType[][] view, int x, int y) {
 		this.view = view;
 		this.x = x;
 		this.y = y;
 	}
 
-	public List<Knoten> expand() {
-		List<Knoten> list = new ArrayList<>();
+	public List<Node> expand() {
+		List<Node> list = new ArrayList<>();
 		for (var i = -1; i < 2; ++i) {
 			for (var j = -1; j < 2; ++j) {
 				if (i == j || Math.abs(i - j) > 1)
@@ -28,7 +28,7 @@ public class Knoten {
 				if (newX > 0 && newY > 0 && newX < view.length && newY < view[newX].length &&
 						view[newX][newY] != PacmanTileType.WALL) {
 					// var newView = copyView(view);
-					list.add(new Knoten(view, newX, newY));
+					list.add(new Node(view, newX, newY));
 				}
 			}
 		}
@@ -36,9 +36,9 @@ public class Knoten {
 		return list;
 	}
 
-    public PacmanTileType zustand() {
-        return this.view[this.x][this.y];
-    }
+	public PacmanTileType zustand() {
+		return this.view[this.x][this.y];
+	}
 
 	@SuppressWarnings("unused")
 	private PacmanTileType[][] copyView(final PacmanTileType[][] view) {
@@ -55,14 +55,14 @@ public class Knoten {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof Knoten))
+		if (!(o instanceof Node))
 			return false;
 
-		var knoten = (Knoten)o;
+		var node = (Node) o;
 
-		return this.view == knoten.view &&
-			this.x == knoten.x &&
-			this.y == knoten.y;
+		return this.view == node.view &&
+				this.x == node.x &&
+				this.y == node.y;
 	}
 
 	@Override

@@ -13,17 +13,17 @@ import de.fh.pacman.PacmanPercept;
 import de.fh.pacman.PacmanStartInfo;
 import de.fh.pacman.enums.PacmanAction;
 import de.fh.pacman.enums.PacmanActionEffect;
-import de.fh.stud.p2.Knoten;
+import de.fh.stud.p2.Node;
 
 public class MyAgent_P3 extends PacmanAgent {
 
 	private PacmanAction nextAction;
 
-	private final Queue<Knoten> path = new ArrayDeque<>();
+	private final Queue<Node> path = new ArrayDeque<>();
 
-	private Suche suche;
-	private Knoten currentKnoten;
-	private Knoten nextKnoten;
+	private Search suche;
+	private Node currentNode;
+	private Node nextNode;
 
 	public MyAgent_P3(String name) {
 		super(name);
@@ -40,18 +40,18 @@ public class MyAgent_P3 extends PacmanAgent {
 		if (path.isEmpty())
 			fillPath(suche.next());
 
-		this.nextKnoten = path.poll();
+		this.nextNode = path.poll();
 		this.nextAction = toTargetAction();
-		this.currentKnoten = this.nextKnoten;
+		this.currentNode = this.nextNode;
 
 		return this.nextAction;
 	}
 
-	private void fillPath(Knoten target) {
-		var visited = new HashSet<Knoten>();
-		Queue<Map.Entry<ArrayDeque<Knoten>, Knoten>> que = new ArrayDeque<>();
+	private void fillPath(Node target) {
+		var visited = new HashSet<Node>();
+		Queue<Map.Entry<ArrayDeque<Node>, Node>> que = new ArrayDeque<>();
 
-		que.offer(Map.entry(new ArrayDeque<Knoten>(), target));
+		que.offer(Map.entry(new ArrayDeque<Node>(), target));
 		while (!que.isEmpty()) {
 			for (var size = que.size(); size > 0; --size) {
 				var entry = que.poll();
@@ -59,7 +59,7 @@ public class MyAgent_P3 extends PacmanAgent {
 				var cur = entry.getValue();
 				if (visited.contains(cur))
 					continue;
-				if (cur.equals(this.currentKnoten)) {
+				if (cur.equals(this.currentNode)) {
 					while (!history.isEmpty())
 						path.offer(history.pollLast());
 					return;
@@ -67,8 +67,7 @@ public class MyAgent_P3 extends PacmanAgent {
 
 				history.offerLast(cur);
 				visited.add(cur);
-				cur.expand().forEach(neighbor ->
-						que.offer(Map.entry(new ArrayDeque<Knoten>(history), neighbor)));
+				cur.expand().forEach(neighbor -> que.offer(Map.entry(new ArrayDeque<Node>(history), neighbor)));
 			}
 		}
 
@@ -76,8 +75,8 @@ public class MyAgent_P3 extends PacmanAgent {
 	}
 
 	private PacmanAction toTargetAction() {
-		int dx = nextKnoten.x - this.currentKnoten.x;
-		int dy = nextKnoten.y - this.currentKnoten.y;
+		int dx = nextNode.x - this.currentNode.x;
+		int dy = nextNode.y - this.currentNode.y;
 
 		if (dx != 0 && dy != 0)
 			throw new IllegalStateException("Error: Next node isn't the immediate neighbor");
@@ -90,12 +89,13 @@ public class MyAgent_P3 extends PacmanAgent {
 
 	@Override
 	protected void onGameStart(PacmanStartInfo startInfo) {
-		this.currentKnoten = new Knoten(startInfo.getPercept().getView(),
-									startInfo.getStartX(), startInfo.getStartY());
-		suche = new Tiefensuche(this.currentKnoten);
+		this.currentNode = new Node(startInfo.getPercept().getView(),
+				startInfo.getStartX(), startInfo.getStartY());
+		suche = new UCS(this.currentNode);
 	}
 
-	@Override protected void onGameover(PacmanGameResult gameResult) {
+	@Override
+	protected void onGameover(PacmanGameResult gameResult) {
 	}
 
 }

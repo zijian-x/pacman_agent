@@ -20,18 +20,18 @@ public class BaumTest {
 		};
 		// Startposition des Pacman
 		int posX = 1, posY = 1;
-		var start = new Knoten(view, posX, posY);
-		var deque = new ArrayDeque<Knoten>();
-		var set = new HashSet<Knoten>();
+		var start = new Node(view, posX, posY);
+		var deque = new ArrayDeque<Node>();
+		var set = new HashSet<Node>();
 		deque.offer(start);
 		set.add(start);
 		while (!deque.isEmpty()) {
-			var knoten = deque.pollLast();
-			knoten.expand().forEach(k -> {
+			var node = deque.pollLast();
+			node.expand().forEach(k -> {
 				if (set.add(k))
 					deque.offer(k);
 			});
-			System.out.println(knoten.x + " " + knoten.y);
+			System.out.println(node.x + " " + node.y);
 		}
 	}
 }
