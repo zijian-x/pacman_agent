@@ -20,9 +20,9 @@ public class BaumTest {
 		};
 		// Startposition des Pacman
 		int posX = 1, posY = 1;
-		var start = new Node(view, posX, posY);
-		var deque = new ArrayDeque<Node>();
-		var set = new HashSet<Node>();
+		var start = new PacmanNode(view, posX, posY);
+		var deque = new ArrayDeque<PacmanNode>();
+		var set = new HashSet<PacmanNode>();
 		deque.offer(start);
 		set.add(start);
 		while (!deque.isEmpty()) {

@@ -5,13 +5,13 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.fh.stud.p2.Node;
+import de.fh.stud.p2.PacmanNode;
 
 public abstract class UninformedSearch extends Search {
 
-	protected final Deque<Node> opened = new ArrayDeque<Node>();
+	protected final Deque<PacmanNode> opened = new ArrayDeque<PacmanNode>();
 
-	public UninformedSearch(Node startNode) {
+	public UninformedSearch(PacmanNode startNode) {
 		startNode.expand().forEach(opened::offer);
 		closed.add(startNode);
 	}

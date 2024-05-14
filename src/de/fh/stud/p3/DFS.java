@@ -1,16 +1,16 @@
 package de.fh.stud.p3;
 
 import de.fh.pacman.enums.PacmanTileType;
-import de.fh.stud.p2.Node;
+import de.fh.stud.p2.PacmanNode;
 
 public class DFS extends UninformedSearch {
 
-	public DFS(Node startNode) {
+	public DFS(PacmanNode startNode) {
 		super(startNode);
 	}
 
 	@Override
-	public Node next() {
+	public PacmanNode next() {
 		var next = opened.pollLast();
 		do {
 			while (closed.contains(next))

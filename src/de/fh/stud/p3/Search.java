@@ -3,12 +3,12 @@ package de.fh.stud.p3;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.fh.stud.p2.Node;
+import de.fh.stud.p2.PacmanNode;
 
 public abstract class Search {
 
-	protected final Set<Node> closed = new HashSet<>();
+	protected final Set<PacmanNode> closed = new HashSet<>();
 
-	public abstract Node next();
+	public abstract PacmanNode next();
 
 }

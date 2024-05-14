@@ -3,16 +3,16 @@ package de.fh.stud.p3;
 import java.util.Map;
 
 import de.fh.pacman.enums.PacmanTileType;
-import de.fh.stud.p2.Node;
+import de.fh.stud.p2.PacmanNode;
 
 public class UCS extends InformedSearch {
 
-	UCS(Node startNode) {
+	UCS(PacmanNode startNode) {
 		super(startNode);
 	}
 
 	@Override
-	public Node next() {
+	public PacmanNode next() {
 		var next = opened.poll();
 		do {
 			while (closed.contains(next.getKey()))

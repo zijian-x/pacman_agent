@@ -13,17 +13,17 @@ import de.fh.pacman.PacmanPercept;
 import de.fh.pacman.PacmanStartInfo;
 import de.fh.pacman.enums.PacmanAction;
 import de.fh.pacman.enums.PacmanActionEffect;
-import de.fh.stud.p2.Node;
+import de.fh.stud.p2.PacmanNode;
 
 public class MyAgent_P3 extends PacmanAgent {
 
 	private PacmanAction nextAction;
 
-	private final Queue<Node> path = new ArrayDeque<>();
+	private final Queue<PacmanNode> path = new ArrayDeque<>();
 
 	private Search suche;
-	private Node currentNode;
-	private Node nextNode;
+	private PacmanNode currentNode;
+	private PacmanNode nextNode;
 
 	public MyAgent_P3(String name) {
 		super(name);
@@ -41,17 +41,18 @@ public class MyAgent_P3 extends PacmanAgent {
 			fillPath(suche.next());
 
 		this.nextNode = path.poll();
-		this.nextAction = toTargetAction();
+		this.nextAction = getActionToTarget();
 		this.currentNode = this.nextNode;
 
 		return this.nextAction;
 	}
 
-	private void fillPath(Node target) {
-		var visited = new HashSet<Node>();
-		Queue<Map.Entry<ArrayDeque<Node>, Node>> que = new ArrayDeque<>();
+	// TODO stop using member variables currentNode
+	private void fillPath(PacmanNode target) {
+		var visited = new HashSet<PacmanNode>();
+		Queue<Map.Entry<ArrayDeque<PacmanNode>, PacmanNode>> que = new ArrayDeque<>();
 
-		que.offer(Map.entry(new ArrayDeque<Node>(), target));
+		que.offer(Map.entry(new ArrayDeque<PacmanNode>(), target));
 		while (!que.isEmpty()) {
 			for (var size = que.size(); size > 0; --size) {
 				var entry = que.poll();
@@ -67,14 +68,15 @@ public class MyAgent_P3 extends PacmanAgent {
 
 				history.offerLast(cur);
 				visited.add(cur);
-				cur.expand().forEach(neighbor -> que.offer(Map.entry(new ArrayDeque<Node>(history), neighbor)));
+				cur.expand().forEach(neighbor -> que.offer(Map.entry(new ArrayDeque<PacmanNode>(history), neighbor)));
 			}
 		}
 
 		throw new IllegalStateException("Path to node not found");
 	}
 
-	private PacmanAction toTargetAction() {
+	// TODO stop using member variables currentNode, nextNode
+	private PacmanAction getActionToTarget() {
 		int dx = nextNode.x - this.currentNode.x;
 		int dy = nextNode.y - this.currentNode.y;
 
@@ -89,7 +91,7 @@ public class MyAgent_P3 extends PacmanAgent {
 
 	@Override
 	protected void onGameStart(PacmanStartInfo startInfo) {
-		this.currentNode = new Node(startInfo.getPercept().getView(),
+		this.currentNode = new PacmanNode(startInfo.getPercept().getView(),
 				startInfo.getStartX(), startInfo.getStartY());
 		suche = new UCS(this.currentNode);
 	}

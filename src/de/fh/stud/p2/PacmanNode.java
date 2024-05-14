@@ -6,19 +6,19 @@ import java.util.Objects;
 
 import de.fh.pacman.enums.PacmanTileType;
 
-public class Node {
+public class PacmanNode {
 
 	public PacmanTileType[][] view;
 	public final int x, y;
 
-	public Node(PacmanTileType[][] view, int x, int y) {
+	public PacmanNode(PacmanTileType[][] view, int x, int y) {
 		this.view = view;
 		this.x = x;
 		this.y = y;
 	}
 
-	public List<Node> expand() {
-		List<Node> list = new ArrayList<>();
+	public List<PacmanNode> expand() {
+		List<PacmanNode> list = new ArrayList<>();
 		for (var i = -1; i < 2; ++i) {
 			for (var j = -1; j < 2; ++j) {
 				if (i == j || Math.abs(i - j) > 1)
@@ -28,7 +28,7 @@ public class Node {
 				if (newX > 0 && newY > 0 && newX < view.length && newY < view[newX].length &&
 						view[newX][newY] != PacmanTileType.WALL) {
 					// var newView = copyView(view);
-					list.add(new Node(view, newX, newY));
+					list.add(new PacmanNode(view, newX, newY));
 				}
 			}
 		}
@@ -55,10 +55,10 @@ public class Node {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof Node))
+		if (!(o instanceof PacmanNode))
 			return false;
 
-		var node = (Node) o;
+		var node = (PacmanNode) o;
 
 		return this.view == node.view &&
 				this.x == node.x &&

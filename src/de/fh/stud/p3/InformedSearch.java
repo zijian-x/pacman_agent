@@ -6,14 +6,14 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
-import de.fh.stud.p2.Node;
+import de.fh.stud.p2.PacmanNode;
 
 public abstract class InformedSearch extends Search {
 
-	protected final Queue<Map.Entry<Node, Double>> opened = new PriorityQueue<>(
+	protected final Queue<Map.Entry<PacmanNode, Double>> opened = new PriorityQueue<>(
 			(x, y) -> Double.compare(x.getValue(), y.getValue()));
 
-	public InformedSearch(Node startNode) {
+	public InformedSearch(PacmanNode startNode) {
 		startNode.expand().forEach(neighbor -> opened.offer(Map.entry(neighbor, 0.0)));
 		closed.add(startNode);
 	}
