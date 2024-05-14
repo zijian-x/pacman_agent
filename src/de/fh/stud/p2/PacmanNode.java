@@ -36,7 +36,7 @@ public class PacmanNode {
 		return list;
 	}
 
-	public PacmanTileType zustand() {
+	public PacmanTileType state() {
 		return this.view[this.x][this.y];
 	}
 

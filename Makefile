@@ -37,5 +37,5 @@ clobber:
 server:
 	@$J $(JFX) -jar lib/Server.jar > /dev/null 2>&1 & disown
 
-run: $(.class)
+agent: $(.class)
 	$J $(JOPT) $(MAIN) $(ARGS)

@@ -6,22 +6,23 @@ import java.util.Map;
 import java.util.Queue;
 
 import de.fh.kiServer.agents.Agent;
-import de.fh.kiServer.util.Util;
 import de.fh.pacman.PacmanAgent;
 import de.fh.pacman.PacmanGameResult;
 import de.fh.pacman.PacmanPercept;
 import de.fh.pacman.PacmanStartInfo;
 import de.fh.pacman.enums.PacmanAction;
 import de.fh.pacman.enums.PacmanActionEffect;
+import de.fh.pacman.enums.PacmanTileType;
 import de.fh.stud.p2.PacmanNode;
 
 public class MyAgent_P3 extends PacmanAgent {
 
+	private PacmanTileType[][] currentView;
 	private PacmanAction nextAction;
 
 	private final Queue<PacmanNode> path = new ArrayDeque<>();
 
-	private Search suche;
+	private Search search;
 	private PacmanNode currentNode;
 	private PacmanNode nextNode;
 
@@ -35,16 +36,28 @@ public class MyAgent_P3 extends PacmanAgent {
 	}
 
 	public PacmanAction action(PacmanPercept percept, PacmanActionEffect actionEffect) {
-		Util.printView(percept.getView());
+		setCurrentView(percept.getView());
+
+		// Util.printView(percept.getView());
+		// TODO extend every other strategy implementation for a custom printView function
+		((Greedy)this.search.strategy).printView();
 
 		if (path.isEmpty())
-			fillPath(suche.next());
+			fillPath(search.next());
 
 		this.nextNode = path.poll();
 		this.nextAction = getActionToTarget();
 		this.currentNode = this.nextNode;
 
 		return this.nextAction;
+	}
+
+	void setCurrentView(PacmanTileType[][] view) {
+		for (var x = 0; x < view.length; ++x) {
+			for (var y = 0; y < view[x].length; ++y) {
+				this.currentView[x][y] = view[x][y];
+			}
+		}
 	}
 
 	private void fillPath(PacmanNode target) {
@@ -67,7 +80,8 @@ public class MyAgent_P3 extends PacmanAgent {
 
 				history.offerLast(cur);
 				visited.add(cur);
-				cur.expand().forEach(neighbor -> que.offer(Map.entry(new ArrayDeque<PacmanNode>(history), neighbor)));
+				cur.expand().forEach(neighbor ->
+						que.offer(Map.entry(new ArrayDeque<PacmanNode>(history), neighbor)));
 			}
 		}
 
@@ -89,9 +103,10 @@ public class MyAgent_P3 extends PacmanAgent {
 
 	@Override
 	protected void onGameStart(PacmanStartInfo startInfo) {
-		this.currentNode = new PacmanNode(startInfo.getPercept().getView(),
+		this.currentView = startInfo.getPercept().getView();
+		this.currentNode = new PacmanNode(this.currentView,
 				startInfo.getStartX(), startInfo.getStartY());
-		suche = new Search(new UCS(this.currentNode));
+		search = new Search(new Greedy(this.currentNode));
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class UCS implements SearchStrategy {
 					opened.offer(Map.entry(neighbor, cost + 1));
 			});
 			closed.add(next.getKey());
-		} while (next.getKey().zustand() != PacmanTileType.DOT);
+		} while (next.getKey().state() != PacmanTileType.DOT);
 
 		return next.getKey();
 	}

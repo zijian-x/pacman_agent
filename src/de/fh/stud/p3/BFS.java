@@ -30,7 +30,7 @@ public class BFS implements SearchStrategy {
 					opened.offerLast(neighbor);
 			});
 			closed.add(next);
-		} while (next.zustand() != PacmanTileType.DOT);
+		} while (next.state() != PacmanTileType.DOT);
 
 		return next;
 	}
