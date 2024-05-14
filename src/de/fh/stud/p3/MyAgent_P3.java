@@ -47,7 +47,6 @@ public class MyAgent_P3 extends PacmanAgent {
 		return this.nextAction;
 	}
 
-	// TODO stop using member variables currentNode
 	private void fillPath(PacmanNode target) {
 		var visited = new HashSet<PacmanNode>();
 		Queue<Map.Entry<ArrayDeque<PacmanNode>, PacmanNode>> que = new ArrayDeque<>();
@@ -75,7 +74,6 @@ public class MyAgent_P3 extends PacmanAgent {
 		throw new IllegalStateException("Path to node not found");
 	}
 
-	// TODO stop using member variables currentNode, nextNode
 	private PacmanAction getActionToTarget() {
 		int dx = nextNode.x - this.currentNode.x;
 		int dy = nextNode.y - this.currentNode.y;
@@ -93,7 +91,7 @@ public class MyAgent_P3 extends PacmanAgent {
 	protected void onGameStart(PacmanStartInfo startInfo) {
 		this.currentNode = new PacmanNode(startInfo.getPercept().getView(),
 				startInfo.getStartX(), startInfo.getStartY());
-		suche = new UCS(this.currentNode);
+		suche = new Search(new UCS(this.currentNode));
 	}
 
 	@Override

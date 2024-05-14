@@ -1,14 +1,23 @@
 package de.fh.stud.p3;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
 
 import de.fh.pacman.enums.PacmanTileType;
 import de.fh.stud.p2.PacmanNode;
 
-public class UCS extends InformedSearch {
+public class UCS implements SearchStrategy {
+
+	protected final Queue<Map.Entry<PacmanNode, Double>> opened = new PriorityQueue<>(
+			(x, y) -> Double.compare(x.getValue(), y.getValue()));
+	private final Set<PacmanNode> closed = new HashSet<>();
 
 	UCS(PacmanNode startNode) {
-		super(startNode);
+		startNode.expand().forEach(neighbor -> opened.offer(Map.entry(neighbor, 0.0)));
+		closed.add(startNode);
 	}
 
 	@Override

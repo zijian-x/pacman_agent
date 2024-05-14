@@ -1,14 +1,17 @@
 package de.fh.stud.p3;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.fh.stud.p2.PacmanNode;
 
-public abstract class Search {
+public class Search {
 
-	protected final Set<PacmanNode> closed = new HashSet<>();
+	protected final SearchStrategy strategy;
 
-	public abstract PacmanNode next();
+	public Search(SearchStrategy strategy) {
+		this.strategy = strategy;
+	}
+
+	public PacmanNode next() {
+		return this.strategy.next();
+	}
 
 }

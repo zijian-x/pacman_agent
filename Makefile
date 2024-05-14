@@ -35,7 +35,7 @@ clobber:
 	$(RM) -rf $(BUILD_DIR)/*
 
 server:
-	$J $(JFX) -jar lib/Server.jar
+	@$J $(JFX) -jar lib/Server.jar > /dev/null 2>&1 & disown
 
 run: $(.class)
 	$J $(JOPT) $(MAIN) $(ARGS)
