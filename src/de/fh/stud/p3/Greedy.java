@@ -16,15 +16,12 @@ public class Greedy implements SearchStrategy {
 			(x, y) -> Double.compare(x.getValue(), y.getValue()));
 	private final Set<PacmanNode> closed = new HashSet<>();
 
-	private final Queue<PacmanNode> dots = new ArrayDeque<>();
-
 	private PacmanNode currentPos;
 	private PacmanNode target;
 
 	public Greedy(PacmanNode startNode) {
 		this.currentPos = startNode;
-		collectAllDots(startNode);
-		this.target = dots.poll();
+		this.target = findNextTarget(startNode);
 
 		// assume that the start node doesn't have a dot and thus won't ever be a target
 		startNode.expand().forEach(neighbor ->
@@ -74,9 +71,8 @@ public class Greedy implements SearchStrategy {
 
 	@Override
 	public PacmanNode next() {
-		while (this.currentPos.equals(this.target) ||
-				this.target.state() != PacmanTileType.DOT) {
-			this.target = dots.poll();
+		if (this.currentPos.equals(this.target)) {
+			this.target = findNextTarget(currentPos);
 			this.opened.clear();
 			this.closed.clear();
 			this.currentPos.expand().forEach(neighbor ->
@@ -98,21 +94,23 @@ public class Greedy implements SearchStrategy {
 		return next.getKey();
 	}
 
-	private void collectAllDots(PacmanNode startNode) {
+	private PacmanNode findNextTarget(PacmanNode currentNode) {
 		Queue<PacmanNode> queue = new ArrayDeque<>();
 		Set<PacmanNode> closed = new HashSet<>();
-		queue.offer(startNode);
+		queue.offer(currentNode);
 		while (!queue.isEmpty()) {
 			for (var n = queue.size(); n > 0; --n) {
 				var node = queue.poll();
 				if (closed.contains(node))
 					continue;
 				if (node.state() == PacmanTileType.DOT)
-					dots.offer(node);
+					return node;
 				node.expand().forEach(queue::offer);
 				closed.add(node);
 			}
 		}
+
+		throw new IllegalStateException("All dots are eaten, the program shouldn't reach here");
 	}
 
 	@SuppressWarnings("unused")
