@@ -41,11 +41,8 @@ public class MyAgent_P3 extends PacmanAgent {
 
 		Util.printView(this.currentNode.view);
 
-		var next = search.next();
 		if (path.isEmpty())
-			fillPath(next);
-		System.out.println("next node: " + next);
-		System.out.println("path: " + path);
+			fillPath(search.next());
 
 		this.nextNode = path.poll();
 		this.nextAction = getActionToTarget();
@@ -108,11 +105,13 @@ public class MyAgent_P3 extends PacmanAgent {
 		this.currentView = startInfo.getPercept().getView();
 		this.currentNode = new PacmanNode(this.currentView,
 				startInfo.getStartX(), startInfo.getStartY());
-		search = new Search(new AStar(this.currentNode));
+		search = new Search(new DFS(this.currentNode));
 	}
 
 	@Override
 	protected void onGameover(PacmanGameResult gameResult) {
+		System.out.println("opened.size: " + this.search.strategy.openedSize());
+		System.out.println("closed.size: " + this.search.strategy.closedSize());
 	}
 
 }
