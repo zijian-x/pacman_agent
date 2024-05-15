@@ -158,4 +158,14 @@ public class AStar implements SearchStrategy {
 		System.out.println("pq: " + opened);
 	}
 
+	@Override
+	public int openedSize() {
+		return opened.size();
+	}
+
+	@Override
+	public int closedSize() {
+		return closed.size();
+	}
+
 }

@@ -119,4 +119,14 @@ public class Greedy implements SearchStrategy {
 		System.out.println("target node: " + target);
 	}
 
+	@Override
+	public int openedSize() {
+		return opened.size();
+	}
+
+	@Override
+	public int closedSize() {
+		return closed.size();
+	}
+
 }

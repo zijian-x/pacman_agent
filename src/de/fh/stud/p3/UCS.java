@@ -38,4 +38,14 @@ public class UCS implements SearchStrategy {
 		return next.getKey();
 	}
 
+	@Override
+	public int openedSize() {
+		return opened.size();
+	}
+
+	@Override
+	public int closedSize() {
+		return closed.size();
+	}
+
 }

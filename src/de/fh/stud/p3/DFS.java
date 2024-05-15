@@ -20,6 +20,7 @@ public class DFS implements SearchStrategy {
 
 	@Override
 	public PacmanNode next() {
+		System.out.println("opened at start of next(): " + opened);
 		var next = opened.pollLast();
 		do {
 			while (closed.contains(next))
@@ -32,7 +33,18 @@ public class DFS implements SearchStrategy {
 			closed.add(next);
 		} while (next.state() != PacmanTileType.DOT);
 
+		System.out.println("opened at end of next(): " + opened);
 		return next;
+	}
+
+	@Override
+	public int openedSize() {
+		return opened.size();
+	}
+
+	@Override
+	public int closedSize() {
+		return closed.size();
 	}
 
 }

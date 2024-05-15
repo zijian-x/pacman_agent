@@ -35,4 +35,14 @@ public class BFS implements SearchStrategy {
 		return next;
 	}
 
+	@Override
+	public int openedSize() {
+		return opened.size();
+	}
+
+	@Override
+	public int closedSize() {
+		return closed.size();
+	}
+
 }
