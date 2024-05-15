@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import de.fh.kiServer.agents.Agent;
+import de.fh.kiServer.util.Util;
 import de.fh.pacman.PacmanAgent;
 import de.fh.pacman.PacmanGameResult;
 import de.fh.pacman.PacmanPercept;
@@ -38,12 +39,13 @@ public class MyAgent_P3 extends PacmanAgent {
 	public PacmanAction action(PacmanPercept percept, PacmanActionEffect actionEffect) {
 		setCurrentView(percept.getView());
 
-		// Util.printView(percept.getView());
-		// TODO extend every other strategy implementation for a custom printView function
-		((Greedy)this.search.strategy).printView();
+		Util.printView(this.currentNode.view);
 
+		var next = search.next();
 		if (path.isEmpty())
-			fillPath(search.next());
+			fillPath(next);
+		System.out.println("next node: " + next);
+		System.out.println("path: " + path);
 
 		this.nextNode = path.poll();
 		this.nextAction = getActionToTarget();
@@ -106,7 +108,7 @@ public class MyAgent_P3 extends PacmanAgent {
 		this.currentView = startInfo.getPercept().getView();
 		this.currentNode = new PacmanNode(this.currentView,
 				startInfo.getStartX(), startInfo.getStartY());
-		search = new Search(new Greedy(this.currentNode));
+		search = new Search(new AStar(this.currentNode));
 	}
 
 	@Override

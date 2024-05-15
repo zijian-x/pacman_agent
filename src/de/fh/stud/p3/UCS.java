@@ -11,7 +11,7 @@ import de.fh.stud.p2.PacmanNode;
 
 public class UCS implements SearchStrategy {
 
-	protected final Queue<Map.Entry<PacmanNode, Double>> opened = new PriorityQueue<>(
+	private final Queue<Map.Entry<PacmanNode, Double>> opened = new PriorityQueue<>(
 			(x, y) -> Double.compare(x.getValue(), y.getValue()));
 	private final Set<PacmanNode> closed = new HashSet<>();
 

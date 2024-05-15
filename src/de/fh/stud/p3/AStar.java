@@ -10,22 +10,48 @@ import java.util.Set;
 import de.fh.pacman.enums.PacmanTileType;
 import de.fh.stud.p2.PacmanNode;
 
-public class Greedy implements SearchStrategy {
+public class AStar implements SearchStrategy {
 
-	private final Queue<Map.Entry<PacmanNode, Double>> opened =
-		new PriorityQueue<>((x, y) -> Double.compare(x.getValue(), y.getValue()));
+	private class Weight implements Comparable<Weight> {
+
+		public double cost;
+		public double heuristic;
+
+		private Weight(double cost, double heuristic) {
+			this.cost = cost;
+			this.heuristic = heuristic;
+		}
+
+		public double sum() {
+			return cost + heuristic;
+		}
+
+		@Override
+		public int compareTo(Weight w) {
+			return Double.compare(this.sum(), w.sum());
+		}
+
+		@Override
+		public String toString() {
+			return String.format("[%.2f, %.2f]", this.cost, this.heuristic);
+		}
+
+	}
+
+	private final Queue<Map.Entry<PacmanNode, Weight>> opened =
+		new PriorityQueue<>((x, y) -> x.getValue().compareTo(y.getValue()));
 	private final Set<PacmanNode> closed = new HashSet<>();
 
 	private PacmanNode currentPos;
 	private PacmanNode target;
 
-	public Greedy(PacmanNode startNode) {
+	public AStar(PacmanNode startNode) {
 		this.currentPos = startNode;
 		this.target = findNextTarget(startNode);
 
 		// assume that the start node doesn't have a dot and thus won't ever be a target
 		startNode.expand().forEach(neighbor ->
-				this.opened.offer(Map.entry(neighbor, evaluateHeuristic(neighbor, this.target))));
+				this.opened.offer(Map.entry(neighbor, new Weight(0, evaluateHeuristic(neighbor, this.target)))));
 		this.closed.add(startNode);
 	}
 
@@ -76,22 +102,34 @@ public class Greedy implements SearchStrategy {
 			this.opened.clear();
 			this.closed.clear();
 			this.currentPos.expand().forEach(neighbor ->
-					opened.offer(Map.entry(neighbor, evaluateHeuristic(neighbor, this.target))));
+					opened.offer(Map.entry(neighbor,
+							new Weight(0, evaluateHeuristic(neighbor, this.target)))));
 			this.closed.add(currentPos);
 		}
 
+		logState();
+
 		var next = opened.poll();
-		while (closed.contains(next.getKey()))
+		while (closed.contains(next.getKey()) ||
+				!isNeighbor(this.currentPos, next.getKey()))
 			next = opened.poll();
 
+		var weight = next.getValue();
 		next.getKey().expand().forEach(neighbor -> {
 			if (!this.closed.contains(neighbor))
-				opened.offer(Map.entry(neighbor, evaluateHeuristic(neighbor, this.target)));
+				this.opened.offer(Map.entry(neighbor,
+							new Weight(weight.cost + 1, evaluateHeuristic(neighbor, this.target))));
 		});
 		this.closed.add(next.getKey());
 
 		this.currentPos = next.getKey();
 		return next.getKey();
+	}
+
+	private boolean isNeighbor(PacmanNode currentNode, PacmanNode checkNode) {
+		var dx = Math.abs(currentNode.x - checkNode.x);
+		var dy = Math.abs(currentNode.y - checkNode.y);
+		return Math.abs(dx - dy) == 1;
 	}
 
 	private PacmanNode findNextTarget(PacmanNode currentNode) {
@@ -117,6 +155,7 @@ public class Greedy implements SearchStrategy {
 	private void logState() {
 		System.out.println("start node: " + currentPos);
 		System.out.println("target node: " + target);
+		System.out.println("pq: " + opened);
 	}
 
 }

@@ -4,7 +4,7 @@ import de.fh.stud.p2.PacmanNode;
 
 public class Search {
 
-	protected final SearchStrategy strategy;
+	public final SearchStrategy strategy;
 
 	public Search(SearchStrategy strategy) {
 		this.strategy = strategy;
